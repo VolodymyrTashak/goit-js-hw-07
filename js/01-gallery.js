@@ -28,19 +28,24 @@ function onGalleryImageClick(event) {
   if (!event.target.classList.contains("gallery__image")) {
     return;
   }
-  const instance = basicLightbox.create(`
+  const instance = basicLightbox.create(
+    `
       <img src="${event.target.dataset.source}" width="800" height="600">
-  `);
-
-  instance.show();
-  console.log(event);
-  document.addEventListener("keydown", onEsc);
+  `,
+    {
+      onShow: () => {
+        document.addEventListener("keydown", onEsc);
+      },
+      onClose: () => {
+        document.removeEventListener("keydown", onEsc);
+      },
+    }
+  );
 
   function onEsc(event) {
     if (event.code === "Escape") {
       instance.close();
-      console.log(event);
     }
-    document.removeEventListener("keydown", onEsc);
   }
+  instance.show();
 }
